@@ -7,3 +7,113 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  username    String   @unique
+  email       String   @unique
+  phone       String?
+  dateOfBirth DateTime
+  role        UserRole @default(PLAYER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizedGames Game[]
+  participations Participation[]
+  notifications  Notification[]
+  reviewsGiven   Review[]
+}
+
+model Sport {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  games       Game[]
+}
+
+model Game {
+  id              String   @id @default(uuid())
+  title           String
+  description     String?
+  date            DateTime
+  duration        Int?
+  location        String
+  latitude        Float
+  longitude       Float
+  maxPlayers      Int
+  currentPlayers  Int @default(0)
+  status          GameStatus @default(SCHEDULED)
+  sportId         String
+  sport           Sport @relation(fields: [sportId], references: [id])
+  organizerId     String
+  organizer       User @relation(fields: [organizerId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  participations Participation[]
+  notifications  Notification[]
+  reviews        Review[]
+}
+
+model Participation {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String
+  status    ParticipationStatus @default(PENDING)
+  joinedAt  DateTime @default(now())
+
+  @@unique([userId, gameId])
+}
+
+model Notification {
+  id        String @id @default(uuid())
+  type      NotificationType
+  message   String
+  read      Boolean @default(false)
+  user      User @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game @relation(fields: [gameId], references: [id])
+  gameId    String
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id          String @id @default(uuid())
+  rating      Int      
+  comment     String?
+  reviewer    User @relation(fields: [reviewerId], references: [id])
+  reviewerId  String
+  game        Game @relation(fields: [gameId], references: [id])
+  gameId      String
+  createdAt   DateTime @default(now())
+}
+
+enum NotificationType {
+  GAME_UPDATE
+  PARTICIPATION_ACCEPTED
+  PARTICIPATION_REJECTED
+}
+
+enum ParticipationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+}
+
+enum UserRole {
+  ADMIN
+  ORGANIZER
+  PLAYER
+}
+
+enum GameStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
