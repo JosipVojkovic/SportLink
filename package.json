@@ -1,0 +1,22 @@
+{
+  "name": "sportlink",
+  "version": "1.0.0",
+  "repository": "git@github.com:JosipVojkovic/SportLink.git",
+  "author": "JosipVojkovic <128196492+JosipVojkovic@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "type-check": "turbo run type-check"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4"
+  }
+}
