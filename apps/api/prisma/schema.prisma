@@ -17,13 +17,15 @@ model User {
   phone       String?
   dateOfBirth DateTime
   role        UserRole @default(PLAYER)
+  points      Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   organizedGames Game[]
   participations Participation[]
   notifications  Notification[]
-  reviewsGiven   Review[]
+  reviewsGiven    Review[]      @relation("WrittenReviews")
+  reviewsReceived Review[]      @relation("ReceivedReviews")
 }
 
 model Sport {
@@ -82,14 +84,19 @@ model Notification {
 }
 
 model Review {
-  id          String @id @default(uuid())
-  rating      Int      
-  comment     String?
-  reviewer    User @relation(fields: [reviewerId], references: [id])
-  reviewerId  String
-  game        Game @relation(fields: [gameId], references: [id])
-  gameId      String
-  createdAt   DateTime @default(now())
+  id                   String @id @default(uuid())
+  skillRating          Int
+  sportsmanshipRating  Int
+  comment              String?
+  reviewer             User @relation("WrittenReviews", fields: [reviewerId], references: [id])
+  reviewerId           String
+  reviewee             User     @relation("ReceivedReviews", fields: [revieweeId], references: [id])
+  revieweeId           String
+  game                 Game     @relation(fields: [gameId], references: [id])
+  gameId               String
+  createdAt            DateTime @default(now())
+
+  @@unique([reviewerId, revieweeId, gameId])
 }
 
 enum NotificationType {
