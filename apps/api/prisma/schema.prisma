@@ -9,23 +9,25 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  firstName   String
-  lastName    String
-  username    String   @unique
-  email       String   @unique
-  phone       String?
-  dateOfBirth DateTime
-  role        UserRole @default(PLAYER)
-  points      Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(uuid())
+  firstName       String
+  lastName        String
+  username        String   @unique
+  email           String   @unique
+  phone           String?
+  dateOfBirth     DateTime
+  role            UserRole @default(PLAYER)
+  points          Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   organizedGames Game[]
   participations Participation[]
   notifications  Notification[]
   reviewsGiven    Review[]      @relation("WrittenReviews")
   reviewsReceived Review[]      @relation("ReceivedReviews")
+  avatar          Avatar?  @relation("UserAvatar")
+  ownedItems      OwnedItem[]
 }
 
 model Sport {
@@ -99,6 +101,37 @@ model Review {
   @@unique([reviewerId, revieweeId, gameId])
 }
 
+model Avatar {
+  id          String @id @default(uuid())
+  skinColor   AvatarSkinColor
+  gender      AvatarGender
+  userId      String  @unique
+  user        User    @relation("UserAvatar", fields: [userId], references: [id])
+
+  items       Item[]  @relation("AvatarItems")
+}
+
+model Item {
+  id          String @id @default(uuid())
+  name        String
+  description String?
+  type        ItemType
+  price       Int
+  imageUrl    String
+
+  avatars     Avatar[] @relation("AvatarItems")
+  ownedBy     OwnedItem[]
+}
+
+model OwnedItem {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  item         Item     @relation(fields: [itemId], references: [id])
+  itemId       String
+  purchasedAt  DateTime @default(now())
+}
+
 enum NotificationType {
   GAME_UPDATE
   PARTICIPATION_ACCEPTED
@@ -123,4 +156,25 @@ enum GameStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum AvatarSkinColor {
+  WHITE
+  TAN
+  BROWN
+  DARK
+  BLACK
+}
+
+enum AvatarGender {
+  MALE
+  FEMALE
+}
+
+enum ItemType {
+  HEAD
+  SHIRT
+  PANTS
+  SHOES
+  EXTRA
 }
