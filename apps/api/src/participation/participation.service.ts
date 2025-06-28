@@ -6,16 +6,16 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class ParticipationService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createParticipationDto: CreateParticipationDto) {
+  async create(createParticipationDto: CreateParticipationDto) {
     return this.prisma.participation.create({ data: createParticipationDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.participation.findMany();
   }
 
-  findOne(id: string) {
-    const participation = this.prisma.participation.findUnique({
+  async findOne(id: string) {
+    const participation = await this.prisma.participation.findUnique({
       where: { id },
     });
 
@@ -26,8 +26,8 @@ export class ParticipationService {
     return participation;
   }
 
-  update(id: string, updateParticipationDto: UpdateParticipationDto) {
-    const participation = this.prisma.participation.findUnique({
+  async update(id: string, updateParticipationDto: UpdateParticipationDto) {
+    const participation = await this.prisma.participation.findUnique({
       where: { id },
     });
 
@@ -41,8 +41,8 @@ export class ParticipationService {
     });
   }
 
-  remove(id: string) {
-    const participation = this.prisma.participation.findUnique({
+  async remove(id: string) {
+    const participation = await this.prisma.participation.findUnique({
       where: { id },
     });
 

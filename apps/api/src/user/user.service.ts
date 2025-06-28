@@ -6,18 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return this.prisma.user.create({
       data: createUserDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
-    const user = this.prisma.user.findUnique({
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
       where: { id },
     });
 
@@ -28,8 +28,8 @@ export class UserService {
     return user;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    const user = this.prisma.user.findUnique({
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.prisma.user.findUnique({
       where: { id },
     });
 
@@ -43,8 +43,8 @@ export class UserService {
     });
   }
 
-  remove(id: string) {
-    const user = this.prisma.user.findUnique({
+  async remove(id: string) {
+    const user = await this.prisma.user.findUnique({
       where: { id },
     });
 

@@ -6,16 +6,16 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class SportService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createSportDto: CreateSportDto) {
+  async create(createSportDto: CreateSportDto) {
     return this.prisma.sport.create({ data: createSportDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.sport.findMany();
   }
 
-  findOne(id: string) {
-    const sport = this.prisma.sport.findUnique({ where: { id } });
+  async findOne(id: string) {
+    const sport = await this.prisma.sport.findUnique({ where: { id } });
 
     if (!sport) {
       throw new NotFoundException(`Sport with id ${id} not found`);
@@ -24,8 +24,8 @@ export class SportService {
     return sport;
   }
 
-  update(id: string, updateSportDto: UpdateSportDto) {
-    const sport = this.prisma.sport.findUnique({ where: { id } });
+  async update(id: string, updateSportDto: UpdateSportDto) {
+    const sport = await this.prisma.sport.findUnique({ where: { id } });
 
     if (!sport) {
       throw new NotFoundException(`Sport with id ${id} not found`);
@@ -34,8 +34,8 @@ export class SportService {
     return this.prisma.sport.update({ where: { id }, data: updateSportDto });
   }
 
-  remove(id: string) {
-    const sport = this.prisma.sport.findUnique({ where: { id } });
+  async remove(id: string) {
+    const sport = await this.prisma.sport.findUnique({ where: { id } });
 
     if (!sport) {
       throw new NotFoundException(`Sport with id ${id} not found`);

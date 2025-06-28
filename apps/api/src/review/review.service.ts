@@ -6,16 +6,16 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class ReviewService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createReviewDto: CreateReviewDto) {
+  async create(createReviewDto: CreateReviewDto) {
     return this.prisma.review.create({ data: createReviewDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.review.findMany();
   }
 
-  findOne(id: string) {
-    const review = this.prisma.review.findUnique({ where: { id } });
+  async findOne(id: string) {
+    const review = await this.prisma.review.findUnique({ where: { id } });
 
     if (!review) {
       throw new NotFoundException(`Review with id ${id} not found`);
@@ -24,8 +24,8 @@ export class ReviewService {
     return review;
   }
 
-  update(id: string, updateReviewDto: UpdateReviewDto) {
-    const review = this.prisma.review.findUnique({ where: { id } });
+  async update(id: string, updateReviewDto: UpdateReviewDto) {
+    const review = await this.prisma.review.findUnique({ where: { id } });
 
     if (!review) {
       throw new NotFoundException(`Review with id ${id} not found`);
@@ -37,8 +37,8 @@ export class ReviewService {
     });
   }
 
-  remove(id: string) {
-    const review = this.prisma.review.findUnique({ where: { id } });
+  async remove(id: string) {
+    const review = await this.prisma.review.findUnique({ where: { id } });
 
     if (!review) {
       throw new NotFoundException(`Review with id ${id} not found`);

@@ -6,18 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class NotificationService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createNotificationDto: CreateNotificationDto) {
+  async create(createNotificationDto: CreateNotificationDto) {
     return this.prisma.notification.create({
       data: createNotificationDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.notification.findMany();
   }
 
-  findOne(id: string) {
-    const notification = this.prisma.notification.findUnique({
+  async findOne(id: string) {
+    const notification = await this.prisma.notification.findUnique({
       where: { id },
     });
 
@@ -28,8 +28,8 @@ export class NotificationService {
     return notification;
   }
 
-  update(id: string, updateNotificationDto: UpdateNotificationDto) {
-    const notification = this.prisma.notification.findUnique({
+  async update(id: string, updateNotificationDto: UpdateNotificationDto) {
+    const notification = await this.prisma.notification.findUnique({
       where: { id },
     });
 
@@ -43,8 +43,8 @@ export class NotificationService {
     });
   }
 
-  remove(id: string) {
-    const notification = this.prisma.notification.findUnique({
+  async remove(id: string) {
+    const notification = await this.prisma.notification.findUnique({
       where: { id },
     });
 

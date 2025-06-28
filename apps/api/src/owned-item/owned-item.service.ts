@@ -6,18 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class OwnedItemService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createOwnedItemDto: CreateOwnedItemDto) {
+  async create(createOwnedItemDto: CreateOwnedItemDto) {
     return this.prisma.ownedItem.create({
       data: createOwnedItemDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.ownedItem.findMany();
   }
 
-  findOne(id: string) {
-    const ownedItem = this.prisma.ownedItem.findUnique({
+  async findOne(id: string) {
+    const ownedItem = await this.prisma.ownedItem.findUnique({
       where: { id },
     });
 
@@ -28,8 +28,8 @@ export class OwnedItemService {
     return ownedItem;
   }
 
-  update(id: string, updateOwnedItemDto: UpdateOwnedItemDto) {
-    const ownedItem = this.prisma.ownedItem.findUnique({
+  async update(id: string, updateOwnedItemDto: UpdateOwnedItemDto) {
+    const ownedItem = await this.prisma.ownedItem.findUnique({
       where: { id },
     });
 
@@ -43,8 +43,8 @@ export class OwnedItemService {
     });
   }
 
-  remove(id: string) {
-    const ownedItem = this.prisma.ownedItem.findUnique({
+  async remove(id: string) {
+    const ownedItem = await this.prisma.ownedItem.findUnique({
       where: { id },
     });
 

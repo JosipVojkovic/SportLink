@@ -6,18 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class AvatarService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createAvatarDto: CreateAvatarDto) {
+  async create(createAvatarDto: CreateAvatarDto) {
     return this.prisma.avatar.create({
       data: createAvatarDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.avatar.findMany();
   }
 
-  findOne(id: string) {
-    const avatar = this.prisma.avatar.findUnique({
+  async findOne(id: string) {
+    const avatar = await this.prisma.avatar.findUnique({
       where: { id },
     });
 
@@ -26,8 +26,8 @@ export class AvatarService {
     return avatar;
   }
 
-  update(id: string, updateAvatarDto: UpdateAvatarDto) {
-    const avatar = this.prisma.avatar.findUnique({
+  async update(id: string, updateAvatarDto: UpdateAvatarDto) {
+    const avatar = await this.prisma.avatar.findUnique({
       where: { id },
     });
 
@@ -39,8 +39,8 @@ export class AvatarService {
     });
   }
 
-  remove(id: string) {
-    const avatar = this.prisma.avatar.findUnique({
+  async remove(id: string) {
+    const avatar = await this.prisma.avatar.findUnique({
       where: { id },
     });
 

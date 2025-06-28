@@ -6,18 +6,18 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class GameService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createGameDto: CreateGameDto) {
+  async create(createGameDto: CreateGameDto) {
     return this.prisma.game.create({
       data: createGameDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.game.findMany();
   }
 
-  findOne(id: string) {
-    const game = this.prisma.game.findUnique({
+  async findOne(id: string) {
+    const game = await this.prisma.game.findUnique({
       where: { id },
     });
 
@@ -26,8 +26,8 @@ export class GameService {
     return game;
   }
 
-  update(id: string, updateGameDto: UpdateGameDto) {
-    const game = this.prisma.game.findUnique({
+  async update(id: string, updateGameDto: UpdateGameDto) {
+    const game = await this.prisma.game.findUnique({
       where: { id },
     });
 
@@ -39,8 +39,8 @@ export class GameService {
     });
   }
 
-  remove(id: string) {
-    const game = this.prisma.game.findUnique({
+  async remove(id: string) {
+    const game = await this.prisma.game.findUnique({
       where: { id },
     });
 
