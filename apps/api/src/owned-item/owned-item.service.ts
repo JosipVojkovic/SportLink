@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOwnedItemDto } from './dto/create-owned-item.dto';
 import { UpdateOwnedItemDto } from './dto/update-owned-item.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -17,12 +17,26 @@ export class OwnedItemService {
   }
 
   findOne(id: string) {
-    return this.prisma.ownedItem.findUnique({
+    const ownedItem = this.prisma.ownedItem.findUnique({
       where: { id },
     });
+
+    if (!ownedItem) {
+      throw new NotFoundException(`OwnedItem with id ${id} not found`);
+    }
+
+    return ownedItem;
   }
 
   update(id: string, updateOwnedItemDto: UpdateOwnedItemDto) {
+    const ownedItem = this.prisma.ownedItem.findUnique({
+      where: { id },
+    });
+
+    if (!ownedItem) {
+      throw new NotFoundException(`OwnedItem with id ${id} not found`);
+    }
+
     return this.prisma.ownedItem.update({
       where: { id },
       data: updateOwnedItemDto,
@@ -30,6 +44,14 @@ export class OwnedItemService {
   }
 
   remove(id: string) {
+    const ownedItem = this.prisma.ownedItem.findUnique({
+      where: { id },
+    });
+
+    if (!ownedItem) {
+      throw new NotFoundException(`OwnedItem with id ${id} not found`);
+    }
+
     return this.prisma.ownedItem.delete({
       where: { id },
     });

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -17,12 +17,26 @@ export class ItemService {
   }
 
   findOne(id: string) {
-    return this.prisma.item.findUnique({
+    const item = this.prisma.item.findUnique({
       where: { id },
     });
+
+    if (!item) {
+      throw new NotFoundException(`Item with id ${id} not found`);
+    }
+
+    return item;
   }
 
   update(id: string, updateItemDto: UpdateItemDto) {
+    const item = this.prisma.item.findUnique({
+      where: { id },
+    });
+
+    if (!item) {
+      throw new NotFoundException(`Item with id ${id} not found`);
+    }
+
     return this.prisma.item.update({
       where: { id },
       data: updateItemDto,
@@ -30,6 +44,14 @@ export class ItemService {
   }
 
   remove(id: string) {
+    const item = this.prisma.item.findUnique({
+      where: { id },
+    });
+
+    if (!item) {
+      throw new NotFoundException(`Item with id ${id} not found`);
+    }
+
     return this.prisma.item.delete({
       where: { id },
     });

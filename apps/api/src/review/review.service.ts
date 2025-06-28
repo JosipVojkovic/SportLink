@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -15,10 +15,22 @@ export class ReviewService {
   }
 
   findOne(id: string) {
-    return this.prisma.review.findUnique({ where: { id } });
+    const review = this.prisma.review.findUnique({ where: { id } });
+
+    if (!review) {
+      throw new NotFoundException(`Review with id ${id} not found`);
+    }
+
+    return review;
   }
 
   update(id: string, updateReviewDto: UpdateReviewDto) {
+    const review = this.prisma.review.findUnique({ where: { id } });
+
+    if (!review) {
+      throw new NotFoundException(`Review with id ${id} not found`);
+    }
+
     return this.prisma.review.update({
       where: { id },
       data: updateReviewDto,
@@ -26,6 +38,12 @@ export class ReviewService {
   }
 
   remove(id: string) {
+    const review = this.prisma.review.findUnique({ where: { id } });
+
+    if (!review) {
+      throw new NotFoundException(`Review with id ${id} not found`);
+    }
+
     return this.prisma.review.delete({ where: { id } });
   }
 }

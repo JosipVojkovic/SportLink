@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAvatarDto } from './dto/create-avatar.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -17,12 +17,22 @@ export class AvatarService {
   }
 
   findOne(id: string) {
-    return this.prisma.avatar.findUnique({
+    const avatar = this.prisma.avatar.findUnique({
       where: { id },
     });
+
+    if (!avatar) throw new NotFoundException(`Avatar with id ${id} not found`);
+
+    return avatar;
   }
 
   update(id: string, updateAvatarDto: UpdateAvatarDto) {
+    const avatar = this.prisma.avatar.findUnique({
+      where: { id },
+    });
+
+    if (!avatar) throw new NotFoundException(`Avatar with id ${id} not found`);
+
     return this.prisma.avatar.update({
       where: { id },
       data: updateAvatarDto,
@@ -30,6 +40,12 @@ export class AvatarService {
   }
 
   remove(id: string) {
+    const avatar = this.prisma.avatar.findUnique({
+      where: { id },
+    });
+
+    if (!avatar) throw new NotFoundException(`Avatar with id ${id} not found`);
+
     return this.prisma.avatar.delete({
       where: { id },
     });
