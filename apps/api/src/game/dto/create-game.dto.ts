@@ -83,13 +83,6 @@ export class CreateGameDto {
   currentPlayers: number;
 
   @ApiProperty({
-    description: 'Status of the game',
-    example: GameStatus.SCHEDULED,
-  })
-  @IsEnum(GameStatus)
-  status: GameStatus;
-
-  @ApiProperty({
     description: 'Sport ID',
     example: '550e8400-e29b-41d4-a716-446655440000',
   })

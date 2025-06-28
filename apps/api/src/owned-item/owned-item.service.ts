@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOwnedItemDto } from './dto/create-owned-item.dto';
 import { UpdateOwnedItemDto } from './dto/update-owned-item.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class OwnedItemService {
+  constructor(private readonly prisma: PrismaService) {}
   create(createOwnedItemDto: CreateOwnedItemDto) {
-    return 'This action adds a new ownedItem';
+    return this.prisma.ownedItem.create({
+      data: createOwnedItemDto,
+    });
   }
 
   findAll() {
-    return `This action returns all ownedItem`;
+    return this.prisma.ownedItem.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ownedItem`;
+  findOne(id: string) {
+    return this.prisma.ownedItem.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateOwnedItemDto: UpdateOwnedItemDto) {
-    return `This action updates a #${id} ownedItem`;
+  update(id: string, updateOwnedItemDto: UpdateOwnedItemDto) {
+    return this.prisma.ownedItem.update({
+      where: { id },
+      data: updateOwnedItemDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ownedItem`;
+  remove(id: string) {
+    return this.prisma.ownedItem.delete({
+      where: { id },
+    });
   }
 }

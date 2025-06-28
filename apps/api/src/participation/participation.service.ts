@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ParticipationService {
+  constructor(private readonly prisma: PrismaService) {}
   create(createParticipationDto: CreateParticipationDto) {
-    return 'This action adds a new participation';
+    return this.prisma.participation.create({ data: createParticipationDto });
   }
 
   findAll() {
-    return `This action returns all participation`;
+    return this.prisma.participation.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} participation`;
+  findOne(id: string) {
+    return this.prisma.participation.findUnique({ where: { id } });
   }
 
-  update(id: number, updateParticipationDto: UpdateParticipationDto) {
-    return `This action updates a #${id} participation`;
+  update(id: string, updateParticipationDto: UpdateParticipationDto) {
+    return this.prisma.participation.update({
+      where: { id },
+      data: updateParticipationDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} participation`;
+  remove(id: string) {
+    return this.prisma.participation.delete({ where: { id } });
   }
 }

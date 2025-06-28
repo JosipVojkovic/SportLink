@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ParticipationService } from './participation.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
@@ -19,16 +27,19 @@ export class ParticipationController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.participationService.findOne(+id);
+    return this.participationService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateParticipationDto: UpdateParticipationDto) {
-    return this.participationService.update(+id, updateParticipationDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateParticipationDto: UpdateParticipationDto,
+  ) {
+    return this.participationService.update(id, updateParticipationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.participationService.remove(+id);
+    return this.participationService.remove(id);
   }
 }
