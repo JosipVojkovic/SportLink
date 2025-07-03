@@ -42,33 +42,27 @@ export class AuthService {
   }
 
   async refresh(req: Request, res: Response) {
-    const refreshToken = req.cookies?.refreshToken;
+    const user = req.user as any;
 
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
+    if (!user) {
+      throw new UnauthorizedException('User does not exist');
     }
 
-    return;
-  }
+    const accessToken = this.generateAccessToken(
+      user.userId,
+      user.role,
+      user.userName,
+    );
+    const refreshToken = this.generateRefreshToken(user.userId);
 
-  async create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-  async findAll() {
-    return `This action returns all auth`;
-  }
-
-  async findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  async update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  async remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return { accessToken };
   }
 
   private generateAccessToken(userId: string, role: string, userName: string) {
