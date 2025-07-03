@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOwnedItemDto } from './dto/create-owned-item.dto';
 import { UpdateOwnedItemDto } from './dto/update-owned-item.dto';
-import { PrismaService } from 'src/prisma.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class OwnedItemService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: DatabaseService) {}
   async create(createOwnedItemDto: CreateOwnedItemDto) {
     return this.prisma.ownedItem.create({
       data: createOwnedItemDto,

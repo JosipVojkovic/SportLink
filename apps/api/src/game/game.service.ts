@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { PrismaService } from 'src/prisma.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: DatabaseService) {}
   async create(createGameDto: CreateGameDto) {
     return this.prisma.game.create({
       data: createGameDto,

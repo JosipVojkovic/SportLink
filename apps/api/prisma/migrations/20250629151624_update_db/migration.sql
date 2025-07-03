@@ -5,21 +5,30 @@ CREATE TYPE "NotificationType" AS ENUM ('GAME_UPDATE', 'PARTICIPATION_ACCEPTED',
 CREATE TYPE "ParticipationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'ORGANIZER', 'PLAYER');
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
 CREATE TYPE "GameStatus" AS ENUM ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "AvatarSkinColor" AS ENUM ('WHITE', 'TAN', 'BROWN', 'DARK', 'BLACK');
+
+-- CreateEnum
+CREATE TYPE "AvatarGender" AS ENUM ('MALE', 'FEMALE');
+
+-- CreateEnum
+CREATE TYPE "ItemType" AS ENUM ('HEAD', 'SHIRT', 'PANTS', 'SHOES', 'EXTRA');
 
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "userName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "dateOfBirth" TIMESTAMP(3) NOT NULL,
-    "role" "UserRole" NOT NULL DEFAULT 'PLAYER',
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
     "points" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -95,8 +104,48 @@ CREATE TABLE "Review" (
     CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Avatar" (
+    "id" TEXT NOT NULL,
+    "skinColor" "AvatarSkinColor" NOT NULL,
+    "gender" "AvatarGender" NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Avatar_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Item" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "type" "ItemType" NOT NULL,
+    "price" INTEGER NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+
+    CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OwnedItem" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "itemId" TEXT NOT NULL,
+    "purchasedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "OwnedItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_AvatarItems" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_AvatarItems_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
@@ -109,6 +158,12 @@ CREATE UNIQUE INDEX "Participation_userId_gameId_key" ON "Participation"("userId
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Review_reviewerId_revieweeId_gameId_key" ON "Review"("reviewerId", "revieweeId", "gameId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Avatar_userId_key" ON "Avatar"("userId");
+
+-- CreateIndex
+CREATE INDEX "_AvatarItems_B_index" ON "_AvatarItems"("B");
 
 -- AddForeignKey
 ALTER TABLE "Game" ADD CONSTRAINT "Game_sportId_fkey" FOREIGN KEY ("sportId") REFERENCES "Sport"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -136,3 +191,18 @@ ALTER TABLE "Review" ADD CONSTRAINT "Review_revieweeId_fkey" FOREIGN KEY ("revie
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Avatar" ADD CONSTRAINT "Avatar_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OwnedItem" ADD CONSTRAINT "OwnedItem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OwnedItem" ADD CONSTRAINT "OwnedItem_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AvatarItems" ADD CONSTRAINT "_AvatarItems_A_fkey" FOREIGN KEY ("A") REFERENCES "Avatar"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AvatarItems" ADD CONSTRAINT "_AvatarItems_B_fkey" FOREIGN KEY ("B") REFERENCES "Item"("id") ON DELETE CASCADE ON UPDATE CASCADE;

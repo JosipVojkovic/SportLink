@@ -10,10 +10,13 @@ import { ReviewModule } from './review/review.module';
 import { AvatarModule } from './avatar/avatar.module';
 import { ItemModule } from './item/item.module';
 import { OwnedItemModule } from './owned-item/owned-item.module';
+import { AuthModule } from './auth/auth.module';
+import { DatabaseService } from './database/database.service';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [UserModule, SportModule, GameModule, ParticipationModule, NotificationModule, ReviewModule, AvatarModule, ItemModule, OwnedItemModule],
+  imports: [UserModule, SportModule, GameModule, ParticipationModule, NotificationModule, ReviewModule, AvatarModule, ItemModule, OwnedItemModule, AuthModule, DatabaseModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseService],
 })
 export class AppModule {}
