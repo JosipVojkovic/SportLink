@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url("Montserrat/Montserrat-VariableFont_wght.ttf");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Montserrat Italic";
+  src: url("Montserrat/Montserrat-Italic-VariableFont_wght.ttf");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("Roboto/Roboto-VariableFont_wght.ttf");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Italic";
+  src: url("Roboto/Roboto-Italic-VariableFont_wght.ttf");
+  font-style: italic;
+}

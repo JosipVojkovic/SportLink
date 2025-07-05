@@ -1,0 +1,105 @@
+.login {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.welcome {
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--primary-color);
+  border-radius: 0 20% 20% 0;
+  padding: 20px;
+}
+
+.form {
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  color: white;
+  padding: 20px;
+}
+
+.form > form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome h1 {
+  color: white;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.welcome p {
+  color: white;
+  font-size: 1rem;
+}
+
+.welcome > button {
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  font-family: var(--primary-font);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.welcome > button:hover {
+  background-color: white;
+  color: var(--text-color);
+}
+
+.form > h1 {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.form > form > input {
+  max-width: 400px;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--text-secondary-color);
+  border-radius: 5px;
+  font-size: 1.1rem;
+}
+
+.form > form > a {
+  color: var(--text-secondary-color);
+  text-decoration: none;
+}
+
+.form > form > a:hover {
+  text-decoration: underline;
+}
+
+.form > form > button {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--primary-font);
+  color: white;
+  background-color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
