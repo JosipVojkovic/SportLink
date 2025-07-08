@@ -28,6 +28,11 @@ export class AuthController {
     return this.authService.login(loginDto, res);
   }
 
+  @Post('register')
+  register(@Body() registerDto: CreateUserDto) {
+    return this.authService.register(registerDto);
+  }
+
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)

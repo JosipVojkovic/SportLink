@@ -58,6 +58,7 @@
 
 .formContainer > p {
   color: var(--text-secondary-color);
+  text-align: center;
 }
 
 .formContainer > button {

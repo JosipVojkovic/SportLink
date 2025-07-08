@@ -1,11 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { DatabaseService } from 'src/database/database.service';
-import { compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt/dist/jwt.service';
 import { Request, Response } from 'express';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,6 +42,33 @@ export class AuthService {
     });
 
     return { accessToken };
+  }
+
+  async register(registerDto: CreateUserDto) {
+    const emailExists = await this.prisma.user.findUnique({
+      where: { email: registerDto.email },
+    });
+
+    if (emailExists) {
+      throw new ConflictException('Email is already registered');
+    }
+
+    const userNameExists = await this.prisma.user.findUnique({
+      where: { userName: registerDto.userName },
+    });
+
+    if (userNameExists) {
+      throw new ConflictException('Username is already taken');
+    }
+
+    const hashedPassword = await hash(registerDto.password, 10);
+
+    return this.prisma.user.create({
+      data: {
+        ...registerDto,
+        password: hashedPassword,
+      },
+    });
   }
 
   async refresh(req: Request, res: Response) {

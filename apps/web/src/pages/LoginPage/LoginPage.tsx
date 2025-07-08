@@ -22,9 +22,9 @@ export const LoginPage: React.FC = () => {
     }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutateAsync(userData);
+    await mutateAsync(userData);
   };
 
   return (

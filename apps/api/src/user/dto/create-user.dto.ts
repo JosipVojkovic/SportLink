@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -43,8 +43,8 @@ export class CreateUserDto {
   @IsString({
     message: 'Username must be a string',
   })
-  @MinLength(6, {
-    message: 'Username must be at least 6 characters long',
+  @MinLength(3, {
+    message: 'Username must be at least 3 characters long',
   })
   userName: string;
 
@@ -68,6 +68,9 @@ export class CreateUserDto {
   @IsString({
     message: 'Password must be a string',
   })
+  @MinLength(3, {
+    message: 'Username must be at least 6 characters long',
+  })
   password: string;
 
   @ApiProperty({
@@ -89,6 +92,7 @@ export class CreateUserDto {
   @IsNotEmpty({
     message: 'Date of birth is required',
   })
+  @Transform(({ value }) => new Date(value))
   @Type(() => Date)
   @IsDate({
     message: 'Date of birth must be a valid date',
