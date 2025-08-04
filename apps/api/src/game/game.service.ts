@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { GameStatus } from 'generated/prisma';
+import { GamesFiltersDto } from './dto/games-filters.dto';
 
 @Injectable()
 export class GameService {
@@ -12,8 +14,76 @@ export class GameService {
     });
   }
 
-  async findAll() {
-    return this.prisma.game.findMany();
+  async findAll(filters: GamesFiltersDto) {
+    const now = new Date();
+
+    const where: any = {
+      status: GameStatus.SCHEDULED,
+      date: {
+        gt: now,
+      },
+    };
+
+    if (filters.startDate) {
+      where.date = {
+        ...where.date,
+        gte: filters.startDate,
+      };
+    }
+
+    if (filters.endDate) {
+      where.date = {
+        ...where.date,
+        lte: filters.endDate,
+      };
+    }
+
+    if (filters.minPrice !== undefined) {
+      where.price = {
+        ...(where.price ?? {}),
+        gte: filters.minPrice,
+      };
+    }
+
+    if (filters.maxPrice !== undefined) {
+      where.price = {
+        ...(where.price ?? {}),
+        lte: filters.maxPrice,
+      };
+    }
+
+    if (filters.sports && filters.sports.length > 0) {
+      where.sport = {
+        name: {
+          in: filters.sports,
+        },
+      };
+    }
+
+    if (filters.environment && filters.environment.length > 0) {
+      where.environment = {
+        in: filters.environment,
+      };
+    }
+
+    if (filters.surface && filters.surface.length > 0) {
+      where.surface = {
+        in: filters.surface,
+      };
+    }
+
+    const games = await this.prisma.game.findMany({
+      where,
+      include: {
+        sport: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return games;
   }
 
   async findOne(id: string) {

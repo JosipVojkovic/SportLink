@@ -41,7 +41,9 @@ model Game {
   id              String   @id @default(uuid())
   title           String
   description     String?
+  format          String
   date            DateTime
+  price           Int
   duration        Int?
   location        String
   latitude        Float
@@ -49,6 +51,8 @@ model Game {
   maxPlayers      Int
   currentPlayers  Int @default(0)
   status          GameStatus @default(SCHEDULED)
+  surface         GameSurface
+  environment     GameEnvironment
   sportId         String
   sport           Sport @relation(fields: [sportId], references: [id])
   organizerId     String
@@ -155,6 +159,20 @@ enum GameStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum GameSurface {
+  TURF
+  CONCRETE
+  SAND
+  GRASS
+  PARKET
+  RUBBER
+}
+
+enum GameEnvironment {
+  INDOOR
+  OUTDOOR
 }
 
 enum AvatarSkinColor {

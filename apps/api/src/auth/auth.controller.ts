@@ -1,11 +1,7 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   HttpStatus,
   HttpCode,
   Res,
@@ -17,6 +13,7 @@ import { LoginDto } from './dto/login.dto';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { RefreshTokenGuard } from './refresh-token.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -38,5 +35,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.authService.refresh(req, res);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(res);
   }
 }

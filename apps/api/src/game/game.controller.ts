@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { GamesFiltersDto } from './dto/games-filters.dto';
 
 @Controller('game')
 export class GameController {
@@ -21,8 +23,8 @@ export class GameController {
   }
 
   @Get()
-  findAll() {
-    return this.gameService.findAll();
+  findAll(@Query() filters: GamesFiltersDto) {
+    return this.gameService.findAll(filters);
   }
 
   @Get(':id')

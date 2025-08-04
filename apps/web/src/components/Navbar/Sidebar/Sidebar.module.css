@@ -1,0 +1,71 @@
+.sidebarOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: transparent;
+  z-index: 98;
+}
+
+.hide {
+  right: -100vw;
+}
+
+.sidebar {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  height: calc(100% - 70px);
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
+  background-color: color-mix(in srgb, var(--secondary-color) 92%, white);
+  z-index: 99;
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  color: white;
+}
+
+.sidebarHeader > svg {
+  width: 25px;
+  height: 25px;
+  padding: 1px;
+}
+
+.sidebarHeader > svg:hover {
+  background-color: var(--primary-color);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.sidebar > ul {
+  list-style-type: none;
+}
+
+.sidebar > ul > li > a {
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar > button {
+  margin-top: auto;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-family: var(--primary-font);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.sidebar > button:hover {
+  background-color: var(--primary-color);
+}

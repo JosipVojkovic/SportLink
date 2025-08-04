@@ -22,12 +22,25 @@ export const useLogin = (navigate: () => void) => {
     mutationFn: loginUser,
     mutationKey: ["login-user"],
     onSuccess: (response: AxiosResponse<LoginResponse>) => {
-      setAccessToken(response.data.accessToken);
+      const token = response.data.accessToken;
+
+      if (!token) {
+        toast.error("Access token not received.");
+        return;
+      }
+
+      setAccessToken(token);
       navigate();
       toast.success("Successfully logged in!");
     },
-    onError(error: string) {
-      toast.error(error);
+    onError(error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else if (typeof error === "string") {
+        toast.error(error);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
     },
   });
 };

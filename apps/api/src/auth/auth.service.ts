@@ -89,10 +89,22 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return { accessToken };
+  }
+
+  async logout(res: Response) {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    return { message: 'Successfully logged out!' };
   }
 
   private generateAccessToken(userId: string, role: string, userName: string) {

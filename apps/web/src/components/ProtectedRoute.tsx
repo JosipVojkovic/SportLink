@@ -1,20 +1,22 @@
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext/useAuthContext";
+import { isTokenExpired } from "../utils";
 
-const isTokenExpired = (token: string) => {
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.exp * 1000 < Date.now();
-  } catch (error) {
-    return true;
-  }
+type ProtectedRouteProps = {
+  children: React.ReactNode;
+  redirectTo?: string;
 };
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+export const ProtectedRoute = ({
+  children,
+  redirectTo = "/login",
+}: ProtectedRouteProps) => {
   const { accessToken } = useAuthContext();
 
-  if (!accessToken || isTokenExpired(accessToken)) {
-    return <Navigate to="/login" replace />;
+  const isAuthenticated = !!accessToken && !isTokenExpired(accessToken);
+
+  if (!isAuthenticated) {
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <>{children}</>;

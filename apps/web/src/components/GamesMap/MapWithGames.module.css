@@ -1,0 +1,102 @@
+.gameMarker {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in srgb, var(--primary-color) 80%, black 20%);
+  color: white;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 80%, black 20%);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-19px);
+  position: relative;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+  user-select: none;
+}
+
+.gameMarker:hover {
+  transform: translateY(-22px) scale(1.05);
+  background-color: color-mix(in srgb, var(--primary-color) 80%, black 20%);
+  cursor: pointer;
+}
+
+.gameMarker::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid black;
+}
+
+.gameMarker > img {
+  width: 40px;
+  height: 40px;
+}
+
+.clickedMarker {
+  min-width: 180px;
+  max-width: 220px;
+  padding: 10px 14px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  transform: translateY(-19px);
+  position: relative;
+  animation: fadeIn 0.2s ease;
+}
+
+.clickedMarker::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.clickedMarker h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.clickedMarker p {
+  margin: 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.clicked {
+  z-index: 9999;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(21px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-19px);
+  }
+}

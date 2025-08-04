@@ -1,0 +1,35 @@
+.legendContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  top: 10px;
+  right: 10px;
+  padding: 8px 12px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.legendContainer h4 {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.legendList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style-type: none;
+}
+
+.legendList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendList img {
+  width: 20px;
+  height: 20px;
+}

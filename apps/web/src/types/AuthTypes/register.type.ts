@@ -29,6 +29,6 @@ export type RegisterResponse = {
 
 export type RegisterMultiStepFormProps = {
   currentStep: number;
-  userData: RegisterRequest;
+  userData: RegisterFormData;
   onUserDataChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };

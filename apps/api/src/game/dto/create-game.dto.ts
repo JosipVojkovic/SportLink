@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { GameEnvironment, GameSurface } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsDate,
@@ -9,7 +10,6 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { GameStatus } from 'generated/prisma';
 
 export class CreateGameDto {
   @ApiProperty({
@@ -29,6 +29,14 @@ export class CreateGameDto {
   description: string;
 
   @ApiProperty({
+    description: 'Format of the game',
+    example: '3v3',
+  })
+  @IsNotEmpty({ message: 'Format is required' })
+  @IsString({ message: 'Format must be a string' })
+  format: string;
+
+  @ApiProperty({
     description: 'Date and time of the game',
     example: '2023-10-01T15:00:00Z',
   })
@@ -36,6 +44,13 @@ export class CreateGameDto {
   @Type(() => Date)
   @IsDate({ message: 'Date must be a valid date' })
   date: Date;
+
+  @ApiProperty({
+    description: 'Price of the game',
+    example: 29.99,
+  })
+  @IsNumber({}, { message: 'Price must be a number' })
+  price: number;
 
   @ApiProperty({
     description: 'Duration of the game in minutes',
@@ -81,6 +96,22 @@ export class CreateGameDto {
   })
   @IsNumber({}, { message: 'Current players must be a number' })
   currentPlayers: number;
+
+  @ApiProperty({
+    description: 'Surface of the game',
+    example: GameSurface.TURF,
+  })
+  @IsOptional()
+  @IsEnum(GameSurface)
+  surface: GameSurface;
+
+  @ApiProperty({
+    description: 'Environment of the game',
+    example: GameEnvironment.OUTDOOR,
+  })
+  @IsOptional()
+  @IsEnum(GameEnvironment)
+  environment: GameEnvironment;
 
   @ApiProperty({
     description: 'Sport ID',

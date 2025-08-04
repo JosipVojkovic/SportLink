@@ -1,0 +1,16 @@
+.options {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.options > label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  justify-content: space-between;
+}
+
+.rotateIcon {
+  transform: rotate(-180deg);
+}

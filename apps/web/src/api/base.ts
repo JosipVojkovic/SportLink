@@ -5,6 +5,12 @@ import axios, {
 } from "axios";
 import type { RefreshResponse } from "../types/AuthTypes";
 
+declare module "axios" {
+  interface InternalAxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+
 export type ErrorResponseType = AxiosError & {
   response: AxiosResponse<{
     statusCode: number;
@@ -26,7 +32,7 @@ export const setupInterceptors = (
   setAccessToken: (token: string | null) => void
 ) => {
   api.interceptors.request.use(async (config) => {
-    const excludedRoutes = ["/auth/login", "/auth/register"];
+    const excludedRoutes = ["/auth/login", "/auth/register", "/auth/logout"];
 
     const shouldAddToken = !excludedRoutes.some((route) =>
       config.url?.includes(route)
@@ -45,7 +51,16 @@ export const setupInterceptors = (
   api.interceptors.response.use(
     (response) => response,
     async (error: ErrorResponseType) => {
-      if (error.response?.status === 401) {
+      const originalRequest = error.config;
+
+      if (
+        error.response?.status === 401 &&
+        originalRequest &&
+        !originalRequest._retry &&
+        !originalRequest.url?.includes("/auth/login") &&
+        !originalRequest.url?.includes("/auth/register") &&
+        !originalRequest.url?.includes("/auth/refresh")
+      ) {
         try {
           const refreshResponse: RefreshResponse =
             await api.post("auth/refresh");
@@ -65,7 +80,9 @@ export const setupInterceptors = (
       }
 
       return Promise.reject(
-        error.response?.data.message || error.message || "Network error"
+        new Error(
+          error.response?.data.message || error.message || "Network error"
+        )
       );
     }
   );
