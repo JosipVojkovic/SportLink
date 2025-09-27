@@ -9,3 +9,13 @@ export type GamesFilterType = {
   surface: string[];
   environment: string[];
 };
+
+export type BackendGamesFilterType = {
+  startDate?: Date;
+  endDate?: Date;
+  sports?: string[];
+  maxPrice?: number;
+  minPrice?: number;
+  surface?: string[];
+  environment?: string[];
+};

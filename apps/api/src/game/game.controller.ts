@@ -22,9 +22,9 @@ export class GameController {
     return this.gameService.create(createGameDto);
   }
 
-  @Get()
-  findAll(@Query() filters: GamesFiltersDto) {
-    return this.gameService.findAll(filters);
+  @Post('search')
+  search(@Body() filters: GamesFiltersDto) {
+    return this.gameService.search(filters);
   }
 
   @Get(':id')

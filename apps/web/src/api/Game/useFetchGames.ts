@@ -1,32 +1,33 @@
 import { api } from "../base";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
-import type { AxiosResponse } from "axios";
 import type { Game } from "../../types/api";
+import { useEffect } from "react";
+import type { BackendGamesFilterType } from "../../types";
 
-const fetchGames = async (): Promise<AxiosResponse<Game[]>> => {
-  return api.get("/game");
+const fetchGames = async (filters: BackendGamesFilterType): Promise<Game[]> => {
+  const response = await api.post("/game/search", filters);
+  return response.data;
 };
 
-export const useFetchGames = () => {
-  const query = useQuery<AxiosResponse<Game[]>, Error>({
+export const useFetchGames = (filters: BackendGamesFilterType) => {
+  const query = useQuery({
     queryKey: ["fetch-games"],
-    queryFn: fetchGames,
+    queryFn: () => fetchGames(filters),
+    enabled: false,
   });
 
   useEffect(() => {
-    if (query.isSuccess) {
+    if (query.isSuccess && query.data) {
       toast.success("Successfully fetched games!");
-      console.log("Games fetched successfully:", query.data?.data);
+      console.log("Games fetched successfully:", query.data);
     }
-  }, [query.isSuccess]);
+  }, [query.isSuccess, query.data]);
 
   useEffect(() => {
-    if (query.isError) {
-      const error = query.error;
-      if (error instanceof Error) {
-        toast.error(error.message);
+    if (query.isError && query.error) {
+      if (query.error instanceof Error) {
+        toast.error(query.error.message);
       } else {
         toast.error("An unknown error occurred.");
       }

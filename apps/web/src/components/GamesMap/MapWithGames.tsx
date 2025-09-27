@@ -8,13 +8,18 @@ import VolleyballIcon from "../../assets/images/volleyball (2).png";
 import PadelIcon from "../../assets/images/paddle (2).png";
 import type { Game } from "../../types/api";
 import { Legend } from "../MapLegend/MapLegend";
+import { XIcon } from "../icons";
+import { Link } from "react-router-dom";
+import { formatDate } from "../../utils";
 
 export const MapWithGames = ({
-  location,
+  center,
+  userLocation,
   games,
   mapId,
 }: {
-  location: Location;
+  center: Location;
+  userLocation: Location | null;
   games: Game[];
   mapId: string;
 }) => {
@@ -43,6 +48,25 @@ export const MapWithGames = ({
   };
 
   useEffect(() => {
+    if (!map || !games.length) {
+      setVisibleGames(games);
+      return;
+    }
+
+    const bounds = map.getBounds();
+    if (!bounds) {
+      setVisibleGames(games);
+      return;
+    }
+
+    const filtered = games.filter((game) =>
+      bounds.contains({ lat: game.latitude, lng: game.longitude })
+    );
+
+    setVisibleGames(filtered);
+  }, [map, games]);
+
+  useEffect(() => {
     if (!map) return;
 
     const listener = map.addListener("bounds_changed", () => {
@@ -64,17 +88,22 @@ export const MapWithGames = ({
   return (
     <>
       <Map
-        defaultCenter={{ lat: location.latitude, lng: location.longitude }}
-        defaultZoom={13}
+        defaultCenter={{ lat: center.latitude, lng: center.longitude }}
+        defaultZoom={userLocation ? 13 : 2}
         mapId={mapId}
         gestureHandling="greedy"
         disableDefaultUI={true}
         zoomControl={true}
         style={{ width: "100%", height: "100%" }}
       >
-        <AdvancedMarker
-          position={{ lat: location.latitude, lng: location.longitude }}
-        />
+        {userLocation && (
+          <AdvancedMarker
+            position={{
+              lat: userLocation.latitude,
+              lng: userLocation.longitude,
+            }}
+          />
+        )}
         {visibleGames.map((game) => (
           <AdvancedMarker
             key={game.id}
@@ -84,11 +113,36 @@ export const MapWithGames = ({
           >
             {clickedMarker === game.id ? (
               <div className={c.clickedMarker}>
-                <h4>{game.title}</h4>
+                <div className={c.header}>
+                  <img src={getIcon(game.sport.name)} className={c.sportIcon} />
+                  <h4>{game.title}</h4>
+                  <XIcon
+                    className={c.closeIcon}
+                    onClick={(e: React.MouseEvent<SVGElement, MouseEvent>) => {
+                      e.stopPropagation();
+                      setClickedMarker(null);
+                    }}
+                  />
+                </div>
 
-                <p>
-                  {game.sport.name} - {game.date}
-                </p>
+                <div className={c.details}>
+                  <p>
+                    <strong>Players:</strong> {game.currentPlayers}/
+                    {game.maxPlayers}
+                  </p>
+
+                  <p>
+                    <strong>Date:</strong> {formatDate(game.date)}
+                  </p>
+
+                  <p>
+                    <strong>Price:</strong> {game.price}€
+                  </p>
+                </div>
+
+                <Link to={`/games/${game.id}`}>
+                  <button className={c.detailsButton}>View Details</button>
+                </Link>
               </div>
             ) : (
               <div className={c.gameMarker}>

@@ -14,7 +14,7 @@ export class GameService {
     });
   }
 
-  async findAll(filters: GamesFiltersDto) {
+  async search(filters: GamesFiltersDto) {
     const now = new Date();
 
     const where: any = {

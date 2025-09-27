@@ -19,29 +19,27 @@ export const GamesMap = ({ visibleGames }: { visibleGames: Game[] }) => {
   const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
-  const [location, setLocation] = useState<Location | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [mapCenter, setMapCenter] = useState<Location>(FALLBACK_LOCATION);
+  const [userLocation, setUserLocation] = useState<Location | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError("Geolocation is not supported by this browser.");
-      setLocation(FALLBACK_LOCATION);
       setIsLoading(false);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
-        setLocation({
+        const loc = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-        });
+        };
+        setMapCenter(loc);
+        setUserLocation(loc);
         setIsLoading(false);
       },
-      (err: GeolocationPositionError) => {
-        setError("Unable to retrieve location: " + err.message);
-        setLocation(FALLBACK_LOCATION);
+      () => {
         setIsLoading(false);
       }
     );
@@ -50,11 +48,12 @@ export const GamesMap = ({ visibleGames }: { visibleGames: Game[] }) => {
   return (
     <div className={c.map}>
       <APIProvider apiKey={mapApiKey}>
-        {isLoading || !location ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <MapWithGames
-            location={location}
+            center={mapCenter}
+            userLocation={userLocation}
             games={visibleGames}
             mapId={mapId}
           />

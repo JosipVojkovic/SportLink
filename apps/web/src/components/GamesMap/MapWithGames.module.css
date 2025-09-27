@@ -45,19 +45,23 @@
 }
 
 .clickedMarker {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   min-width: 180px;
   max-width: 220px;
   padding: 10px 14px;
   background: white;
-  border-radius: 12px;
+  border-radius: 7px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   color: black;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
-  transform: translateY(-19px);
+  margin-bottom: 19px;
   position: relative;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s ease;
+  cursor: grab;
 }
 
 .clickedMarker::after {
@@ -70,20 +74,73 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid white;
+  border-top: 8px solid black;
   filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
 }
 
-.clickedMarker h4 {
-  margin: 0 0 4px;
-  font-size: 15px;
-  font-weight: 600;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 27px 5px 0;
+  border-bottom: 1px solid #ddd;
 }
 
-.clickedMarker p {
-  margin: 0;
-  font-size: 13px;
-  color: #555;
+.sportIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.closeIcon {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  border-radius: 3px;
+}
+
+.closeIcon:hover {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.details p {
+  display: flex;
+  column-gap: 4px;
+  align-items: center;
+}
+
+.detailsButton {
+  width: 100%;
+  margin-top: 3px;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: var(--primary-font);
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.detailsButton:hover {
+  background: color-mix(in srgb, var(--primary-color) 80%, black 20%);
 }
 
 .clicked {
@@ -93,10 +150,10 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(21px);
+    transform: scale(0);
   }
   to {
     opacity: 1;
-    transform: translateY(-19px);
+    transform: scale(1);
   }
 }

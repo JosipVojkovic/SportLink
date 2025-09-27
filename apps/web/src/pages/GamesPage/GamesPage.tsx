@@ -1,14 +1,15 @@
 import c from "./GamesPage.module.css";
 import { GamesMap } from "../../components/GamesMap/GamesMap";
 import { AngleDownIcon, SlidersIcon } from "../../components/icons";
-import { useEffect, useState } from "react";
-import type { GamesFilterType } from "../../types";
+import { useEffect, useMemo, useState } from "react";
+import type { BackendGamesFilterType, GamesFilterType } from "../../types";
 import { DateRangePicker } from "../../components/DateRangePicker/DateRangePicker";
 import { TimeIntervalInput } from "../../components/TimeInput/TimeIntervalInput";
 import { toast } from "react-toastify";
 import { CheckboxesFilterSection } from "../../components/CheckboxesFilterSection/CheckboxesFilterSection";
 import type { Game } from "../../types/api";
 import { useFetchGames } from "../../api";
+import { combineDateTime } from "../../utils";
 
 export const GamesPage = () => {
   const today = new Date();
@@ -28,10 +29,20 @@ export const GamesPage = () => {
     maxPrice: 500,
     minPrice: 0,
     surface: ["Turf", "Concrete", "Sand", "Grass", "Parket", "Rubber"],
-    environment: ["Outside", "Inside"],
+    environment: ["Indoor", "Outdoor"],
   });
 
-  const { data } = useFetchGames();
+  const backendFilters: BackendGamesFilterType = useMemo(() => {
+    const { startTime, endTime, ...restFilters } = filters;
+
+    return {
+      ...restFilters,
+      startDate: combineDateTime(filters.startDate, startTime),
+      endDate: combineDateTime(filters.endDate, endTime),
+    };
+  }, [filters]);
+
+  const { data, refetch: fetchGames } = useFetchGames(backendFilters);
 
   const changeActiveFilter = (filter: string) => {
     if (activeFilter === filter) setActiveFilter("");
@@ -114,15 +125,11 @@ export const GamesPage = () => {
   };
 
   useEffect(() => {
-    setVisibleGames(data?.data || []);
+    setVisibleGames(data || []);
   }, [data]);
-
-  console.log("Filters:", filters);
 
   return (
     <section className={c.gamesSection}>
-      <h1>Games</h1>
-
       <div className={c.availableGamesContainer}>
         <div className={c.gameFilters}>
           <h2>
@@ -203,7 +210,7 @@ export const GamesPage = () => {
               title="Environment"
               activeFilter={activeFilter}
               setActiveFilter={setActiveFilter}
-              options={["Outside", "Inside"]}
+              options={["Indoor", "Outdoor"]}
               selected={filters.environment}
               onChange={handleEnvironmentChange}
             />
@@ -225,7 +232,7 @@ export const GamesPage = () => {
             />
           </div>
 
-          <button>Filter</button>
+          <button onClick={() => fetchGames()}>Filter</button>
         </div>
 
         <GamesMap visibleGames={visibleGames} />

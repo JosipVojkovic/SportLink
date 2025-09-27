@@ -75,12 +75,7 @@ export class GamesFiltersDto {
   @IsArray()
   @IsOptional()
   @IsEnum(GameEnvironment, { each: true, message: 'Invalid environment value' })
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return [value];
-    }
-    return value;
-  })
+  @Transform(({ value }) => value?.map((v: string) => v.toUpperCase()))
   environment?: GameEnvironment[];
 
   @ApiProperty({
@@ -92,11 +87,6 @@ export class GamesFiltersDto {
   @IsArray()
   @IsOptional()
   @IsEnum(GameSurface, { each: true, message: 'Invalid surface value' })
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return [value];
-    }
-    return value;
-  })
+  @Transform(({ value }) => value?.map((v: string) => v.toUpperCase()))
   surface?: GameSurface[];
 }
